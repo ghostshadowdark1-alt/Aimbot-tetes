@@ -1,81 +1,50 @@
---[[
-Requer uma integração com ImGui! (exemplo: para FiveM, CitizenFX, ou outros wrappers que suportam ImGui em Lua)
-]]
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local Window = Rayfield:CreateWindow({
+   Name = "GOS",
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "Loading..",
+   LoadingSubtitle = "by Gos",
+   ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
+   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
-local ImGui = require("ImGui") -- Adapte para seu ambiente
-local showMenu = true
+   ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
 
-local FOV = 30
-local AIM_SMOOTH = 0.1
-local aimbotEnabled = true
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
 
-function GetAngleToTarget(playerPos, targetPos)
-    local dx = targetPos.x - playerPos.x
-    local dy = targetPos.y - playerPos.y
-    local dz = targetPos.z - playerPos.z
-    return math.atan2(dy, dx) * (180 / math.pi)
-end
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "GOS Hub"
+   },
 
-function IsInFOV(playerAngle, targetAngle, fov)
-    local diff = math.abs(targetAngle - playerAngle)
-    return diff <= (fov / 2)
-end
+   Discord = {
+      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
 
-function Aimbot(player, targets)
-    if not aimbotEnabled then return end
-    local bestTarget = nil
-    local bestAngleDiff = FOV
-    for _, target in pairs(targets) do
-        if target.isAlive and target.team ~= player.team then
-            local angleToTarget = GetAngleToTarget(player.position, target.position)
-            if IsInFOV(player.angle, angleToTarget, FOV) then
-                local angleDiff = math.abs(player.angle - angleToTarget)
-                if angleDiff < bestAngleDiff then
-                    bestAngleDiff = angleDiff
-                    bestTarget = target
-                end
-            end
-        end
-    end
-    if bestTarget then
-        local angleToAim = GetAngleToTarget(player.position, bestTarget.position)
-        player.angle = player.angle + (angleToAim - player.angle) * AIM_SMOOTH
-    end
-end
+   KeySystem = true, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key na descriçao",
+      Note = "https://rekonise.com/key-q6w2m", -- Use this to tell the user how to get a key
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"2026"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
 
--- Função para desenhar a interface ImGui
-function DrawAimbotMenu()
-    ImGui.Begin("Aimbot Settings", showMenu)
-    _, aimbotEnabled = ImGui.Checkbox("Aimbot On/Off", aimbotEnabled)
-    _, FOV = ImGui.SliderInt("FOV", FOV, 1, 180)
-    _, AIM_SMOOTH = ImGui.SliderFloat("Aimbot Smooth", AIM_SMOOTH, 0.01, 1.0)
-    ImGui.Text("Pressione INSERT para mostrar/ocultar o menu")
-    ImGui.End()
-end
+local Tab = Window:CreateTab("Main", 4483362458) -- Title, Image
+local Section = Tab:CreateSection("Main")
 
--- Exemplo de integração no loop do jogo (adapte para seu ambiente)
-Citizen.CreateThread(function()
-    while true do
-        if showMenu then DrawAimbotMenu() end
-        -- Aimbot logic
-        local player = GetLocalPlayer()
-        local targets = GetAllEnemies()
-        Aimbot(player, targets)
-        Citizen.Wait(10)
-    end
-end)
+local Toggle = Tab:CreateToggle({
+   Name = "99 Noites",
+   CurrentValue = false,
+   Flag = "getgenv().99Noites = false", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Bad031/Green-Eye/refs/heads/main/Gec.Forest"))()
 
--- Atalho para mostrar/ocultar o menu (INSERT)
-RegisterCommand("toggle_aimbot_menu", function()
-    showMenu = not showMenu
-end, false)
-
--- Mapear tecla INSERT para abrir/fechar menu (adapte para seu ambiente)
-Citizen.CreateThread(function()
-    while true do
-        if IsKeyJustPressed(0x2D) then -- 0x2D = VK_INSERT
-            showMenu = not showMenu
-        end
-        Citizen.Wait(10)
-    end
-end)
+   end,
+})
